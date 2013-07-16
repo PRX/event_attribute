@@ -20,23 +20,26 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-    class Referral < ActiveRecord::Base
-      event_attribute :applied_at, :attribute => 'pending', :nil_equals => true
-      event_attribute :subscribed_on
-    end
+class Referral < ActiveRecord::Base
+  event_attribute :applied_at, :attribute => 'pending', :nil_equals => true
+  event_attribute :subscribed_on
+end
 
-    referral = Referral.create(:applied_at => Time.now)
-    referral.pending?           # => false
-    referral.subscribed?        # => false
-    
-    referral.pending = true
-    referral.applied_at         # => nil
-    referral.pending?           # => true
-    
-    referral.subscribed = true
-    referral.subscribed_on      # => Time.now
-    referral.subscribed?        # => true
+referral = Referral.create(:applied_at => Time.now)
+referral.pending?           # => false
+referral.subscribed?        # => false
+
+referral.pending = true
+referral.applied_at         # => nil
+referral.pending?           # => true
+
+referral.subscribed = true
+referral.subscribed_on      # => Date.today
+referral.subscribed?        # => true
 ```
+
+In this example, subscribed_on is defined in the schema as being a Date type column, and applied_at is defined in the schema as being a DateTime.
+
 
 ## Contributing
 

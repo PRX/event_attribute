@@ -1,4 +1,4 @@
-require 'abstract_unit'
+require File.join(File.dirname(__FILE__), "/abstract_unit")
 
 class Referral < ActiveRecord::Base
   event_attribute :applied_at, :attribute => 'pending', :nil_equals => true
@@ -55,7 +55,7 @@ class EventAttributeTest < Test::Unit::TestCase
   end
   
   def test_should_return_false_when_nil_equals_true_and_column_is_not_nil
-    referral = Referral.new(:applied_at => Time.now)
+    referral = Referral.new(:applied_at => DateTime.now)
     assert_not_nil referral.applied_at
     assert !referral.pending?
   end
@@ -63,25 +63,25 @@ class EventAttributeTest < Test::Unit::TestCase
   def test_should_return_time_when_nil_equals_true_and_attribute_is_false
     referral = Referral.new(:pending => false)
     assert !referral.pending?
-    assert_kind_of Time, referral.applied_at
+    assert_kind_of DateTime, referral.applied_at
   end
   
   def test_should_return_time_when_nil_equals_true_and_attribute_equals_integer_0
     referral = Referral.new(:pending => 0)
     assert !referral.pending?
-    assert_kind_of Time, referral.applied_at
+    assert_kind_of DateTime, referral.applied_at
   end
   
   def test_should_return_time_when_nil_equals_true_and_attribute_equals_string_0
     referral = Referral.new(:pending => "0")
     assert !referral.pending?
-    assert_kind_of Time, referral.applied_at
+    assert_kind_of DateTime, referral.applied_at
   end
   
   def test_should_return_time_when_nil_equals_true_and_attribute_equals_f
     referral = Referral.new(:pending => "f")
     assert !referral.pending?
-    assert_kind_of Time, referral.applied_at
+    assert_kind_of DateTime, referral.applied_at
   end
   
   def test_should_return_false_when_nil_equals_false_and_column_is_nil
@@ -90,32 +90,32 @@ class EventAttributeTest < Test::Unit::TestCase
     assert !referral.subscribed?
   end
   
-  def test_should_return_time_when_nil_equals_false_and_attribute_is_true
+  def test_should_return_date_when_nil_equals_false_and_attribute_is_true
     referral = Referral.new(:subscribed => true)
     assert referral.subscribed?
-    assert_kind_of Time, referral.subscribed_on
+    assert_kind_of Date, referral.subscribed_on
   end
   
-  def test_should_return_time_when_nil_equals_false_and_attribute_equals_integer_1
+  def test_should_return_date_when_nil_equals_false_and_attribute_equals_integer_1
     referral = Referral.new(:subscribed => 1)
     assert referral.subscribed?
-    assert_kind_of Time, referral.subscribed_on
+    assert_kind_of Date, referral.subscribed_on
   end
   
-  def test_should_return_time_when_nil_equals_false_and_attribute_equals_string_1
+  def test_should_return_date_when_nil_equals_false_and_attribute_equals_string_1
     referral = Referral.new(:subscribed => "1")
     assert referral.subscribed?
-    assert_kind_of Time, referral.subscribed_on
+    assert_kind_of Date, referral.subscribed_on
   end
   
-  def test_should_return_time_when_nil_equals_false_and_attribute_equals_t
+  def test_should_return_date_when_nil_equals_false_and_attribute_equals_t
     referral = Referral.new(:subscribed => "t")
     assert referral.subscribed?
-    assert_kind_of Time, referral.subscribed_on
+    assert_kind_of Date, referral.subscribed_on
   end
   
   def test_should_return_true_when_nil_equals_false_and_column_is_not_nil
-    referral = Referral.new(:subscribed_on => Time.now)
+    referral = Referral.new(:subscribed_on => DateTime.now)
     assert_not_nil referral.subscribed_on
     assert referral.subscribed?
   end
@@ -142,37 +142,5 @@ class EventAttributeTest < Test::Unit::TestCase
     referral = Referral.new(:subscribed => "f")
     assert !referral.subscribed?
     assert_nil referral.subscribed_on
-  end
-  
-  def test_should_find_referral_when_nil_equals_true_and_column_is_nil
-    referral = Referral.create :applied_at => nil
-    assert_equal referral, Referral.find_by_pending(true)
-  end
-  
-  def test_should_find_referral_when_nil_equals_true_and_column_is_not_nil
-    referral = Referral.create :applied_at => Time.now
-    assert_equal referral, Referral.find_by_pending(false)
-  end
-  
-  def test_should_find_referral_when_nil_equals_false_and_column_is_nil
-    referral = Referral.create :subscribed_on => nil
-    assert_equal referral, Referral.find_by_subscribed(false)
-  end
-  
-  def test_should_find_referral_when_nil_equals_false_and_column_is_not_nil
-    referral = Referral.create :subscribed_on => Time.now
-    assert_equal referral, Referral.find_by_subscribed(true)
-  end
-  
-  def test_should_find_referral_with_multiple_columns
-    referral = Referral.create :name => "John Smith", :subscribed_on => Time.now, :applied_at => Time.now
-    assert_equal referral, Referral.find_by_name_and_pending_and_subscribed("John Smith", false, true)
-  end
-  
-  def test_should_not_find_a_referral
-    referral = Referral.create :name => "John Smith", :subscribed_on => Time.now, :applied_at => Time.now
-    assert_nil Referral.find_by_name_and_pending_and_subscribed("Bob Hope", false, true)
-    assert_nil Referral.find_by_name_and_pending_and_subscribed("John Smith", true, true)
-    assert_nil Referral.find_by_name_and_pending_and_subscribed("John Smith", false, false)
   end
 end

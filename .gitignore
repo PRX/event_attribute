@@ -1,2 +1,4 @@
-*.db
+Gemfile.lock
+pkg
 test/*.log
+*.db
